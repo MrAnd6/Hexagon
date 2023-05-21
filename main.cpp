@@ -7,4 +7,3 @@ int main(){
         window.render();
     }
 }
-
