@@ -31,7 +31,7 @@ private:
 
 
     //Private functions
-    void initvariables();
+    void initVariables();
     void initGUI();
     void setPos();
     void newFigure();
