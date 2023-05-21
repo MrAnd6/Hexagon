@@ -3,9 +3,8 @@
 #ifndef HEXAGON_WINDOW_H
 #define HEXAGON_WINDOW_H
 
-#include <SFML/Graphics.hpp>
-#include <SFML/Window.hpp>
-#include <SFML/System.hpp>
+#include "Menu.cpp"
+#include "Hexagon.cpp"
 
 class Window {
 private:
@@ -14,11 +13,19 @@ private:
     sf::VideoMode vm;
     sf::Event ev;
     int state;
+    int prevState;
+    bool player;
+    sf::Vector2f mousePos;
+
+    //Objects of helping classes
+    Menu menu;
+    Hexagon hexagon;
 
     //Private functions
     void initWindow();
     void initVariables();
     void eventListener();
+    void updateMousePos();
 
 public:
     //Constructor and destructor
@@ -32,6 +39,7 @@ public:
     //Functions
     void update();
     void render();
+    void changeState(int state);
 
 
 

@@ -1,6 +1,4 @@
-//
-// Created by User on 14.05.2023.
-//
+
 
 #include "Window.h"
 
@@ -13,6 +11,7 @@ void Window::initWindow() {
 
 void Window::initVariables() {
     this->window = nullptr;
+    this->state=0;
 }
 
 void Window::eventListener() {
@@ -26,10 +25,16 @@ void Window::eventListener() {
                 break;
         }
     }
+
+}
+
+void Window::updateMousePos() {
+    sf::Vector2i pos = sf::Mouse::getPosition(*this->window);
+    this->mousePos = this->window->mapPixelToCoords(pos);
 }
 
 //Constructor and destructor
-Window::Window() {
+Window::Window(){
     this->initVariables();
     this->initWindow();
 }
@@ -45,7 +50,30 @@ bool Window::working() const {
 
 //Functions
 void Window::update() {
+    this->updateMousePos();
     this->eventListener();
+    if(prevState != state){
+        switch(state){
+            case 1:
+                this->hexagon.eraseField();
+        }
+        prevState = state;
+    }
+    switch (state){
+        case 0: //menu
+            this->menu.update(this->mousePos, this->state);
+            break;
+        case 1: //New game
+            this->hexagon.update(this->mousePos, this->state);
+            break;
+        case 2: //Load Game
+            break;
+        case 3: //Score board
+            break;
+        case 4: //Chooser of game type
+            break;
+    }
+
 }
 
 void Window::render() {
@@ -61,18 +89,24 @@ void Window::render() {
     this->window->clear();
     switch (state){
         case 0: //menu
+            this->menu.render(*this->window);
             break;
-        case 1:
+        case 1: //Hexagon game
+            this->hexagon.render(*this->window);
             break;
-        case 2:
+        case 2: //Load Game
             break;
-        case 3:
+        case 3: //Score board
             break;
-        case 4:
+        case 4: //Chooser of game type
             break;
     }
 
     this->window->display();
+}
+
+void Window::changeState(int state) {
+    this->state=state;
 }
 
 
