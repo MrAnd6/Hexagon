@@ -1,9 +1,9 @@
 
 #include "Hexagon.h"
 //Private functions
-void Hexagon::initvariables() {
+void Hexagon::initVariables() {
     /**
-        Initialise starting values.
+        Initialises starting values.
         -in for loop places numbers -1, 0 that represents non-game, game positions
         -changes 3 positions in center to non-game
         -places 3 blue figures(1) and 3 red figures(2) on their starting positions
@@ -39,6 +39,7 @@ void Hexagon::initvariables() {
     quit=false;
     mouseHeld=false;
     isSelected=false;
+    end=false;
     blue=3;
     red=3;
 }
@@ -81,6 +82,11 @@ void Hexagon::initGUI() {
 }
 
 void Hexagon::newFigure() {
+    /**
+        Creates new figures
+        -creates new figures
+        -adds figures to the vector of figures
+     */
     sf::CircleShape figure = sf::CircleShape(30,6);
     figure.setOutlineThickness(7);
     figure.setOutlineColor(sf::Color::Transparent);
@@ -118,7 +124,11 @@ void Hexagon::setPos() {
     texts.at(6).setPosition({560, 400});
 }
 
-void Hexagon::chooseFigure(sf::CircleShape & fig) {
+sf::Vector2i Hexagon::findInArr(sf::CircleShape & fig) {
+    return sf::Vector2i{(static_cast<int>(fig.getPosition().x) - 280) / 70, (static_cast<int>(fig.getPosition().y) - 50) / 40};
+}
+
+ void Hexagon::selectFigure(sf::CircleShape & fig) {
     /**
         Highlights or removes a highlight of figure that you hove chosen
         -checks if you have chosen your figure
@@ -127,24 +137,24 @@ void Hexagon::chooseFigure(sf::CircleShape & fig) {
         -assigns coordinates of chosen figure to the variable
         -uses possibleMoves() to highlight or remove a highlight of possible moves
      */
+
     if(fig.getFillColor() != this->turn)
         std::cout << "ITS NOT YOUR FIGURE!\n";
-    else if(fig.getFillColor() == this->turn && !isSelected){
-        fig.setOutlineColor(sf::Color::Yellow);
-        int x = (static_cast<int>(fig.getPosition().x) - 280) / 70;
-        int y = (static_cast<int>(fig.getPosition().y) - 50) / 40;
-        selectedFigure = {x,y};
-        isSelected = true;
-        possibleMoves(fig);
-    } else if (fig.getOutlineColor() == sf::Color::Yellow && isSelected){
-        fig.setOutlineColor(sf::Color::Transparent);
-        selectedFigure = {0,0};
-        isSelected = false;
-        possibleMoves(fig);
+    else {
+        if (!isSelected) {
+            fig.setOutlineColor(sf::Color::Yellow);
+            selectedFigure = findInArr(fig);
+        }
+        else{
+            fig.setOutlineColor(sf::Color::Transparent);
+            selectedFigure = {0, 0};
+        }
+        isSelected = !isSelected;
+        possibleMoves(findInArr(fig));
     }
 }
 
-void Hexagon::possibleMoves(sf::CircleShape &fig) {
+int Hexagon::possibleMoves(sf::Vector2i pos) {
     /**
         Highlights or removes a highlight of possible moves
         -finds a position of figure in field array
@@ -154,54 +164,49 @@ void Hexagon::possibleMoves(sf::CircleShape &fig) {
         if your removed a selection from your figure
         -changes a valur of selected slots from 3 to 0(empty cells)
      */
-    int x = (static_cast<int>(fig.getPosition().x) - 280) / 70;
-    int y = (static_cast<int>(fig.getPosition().y) - 50) / 40;
-    for (int i = y-4; i <= y+4; ++i) {
+    int moves = 0;
+    for (int i = pos.y-4; i <= pos.y+4; ++i) {
         if(i<0 || i>16)
             continue;
-        for (int j = x-4; j <= x+4; ++j) {
-            if(j<0 || j>8 || (abs(x - j) + abs(y - i) > 4 || abs(x-j) > 2))
+        for (int j = pos.x-2; j <= pos.x+2; ++j) {
+            if(j<0 || j>8 || (abs(pos.x - j) + abs(pos.y - i) > 4))
                 continue;
-            if (field[i][j] == 0 && isSelected)
-                field[i][j] = 3;
-            if(field[i][j] == 3 && !isSelected)
-                field[i][j] = 0;
+            else {
+                if (field[i][j] == 0) {
+                    field[i][j] = 3;
+                    moves++;
+                }
+                else if (field[i][j] == 3) {
+                    field[i][j] = 0;
+                }
+            }
         }
     }
     this->updateFigures();
+    return moves;
 }
 
-
-void Hexagon::updateScore() {
+void Hexagon::unselectFigure(bool change) {
     /**
-        Update score on the window
+        Unselects figures in the end of the move
+        -finds figure that was selected
+        -uses selectFigure to unselect figures
+        -if you moved your figure to 2 cells, removes your figure from previous position
      */
-    std::stringstream ss;
-    ss<<"Blue: " << this->blue <<"\n"
-        <<"Red: "<<this->red <<"\n";
-    this->texts.at(1).setString(ss.str());
-}
-
-void Hexagon::updateFigures() {
-    /**
-        Updates outlines and figure colors
-     */
-    int idx = 0;
-    for (int i = 0; i < 17; ++i) {
-        for (int j = 0; j < 9; ++j) {
-            if(field[i][j] == 0)
-                figures.at(idx++).setOutlineColor(sf::Color::Transparent);
-            if(field[i][j] == 1)
-                figures.at(idx++).setFillColor(sf::Color::Blue);
-            if(field[i][j] == 2)
-                figures.at(idx++).setFillColor(sf::Color::Red);
-            if(field[i][j] == 3)
-                figures.at(idx++).setOutlineColor(sf::Color::Green);
+    for (sf::CircleShape & fig : figures){
+        if(fig.getOutlineColor() == sf::Color::Yellow){
+            selectFigure(fig);
+            if(change){
+                fig.setFillColor(sf::Color::Black);
+                sf::Vector2i pos = findInArr(fig);
+                field[pos.y][pos.x] = 0;
+            }
+            break;
         }
     }
 }
 
-void Hexagon::makeMove(sf::CircleShape & fig) {
+void Hexagon::makeMove(sf::Vector2i pos) {
     /**
         Makes a move
         -finds where you want to go
@@ -212,51 +217,28 @@ void Hexagon::makeMove(sf::CircleShape & fig) {
         -uses captureFigures() to capture opponent figures
         -uses changeTurn() to end turn
      */
-    int x = (static_cast<int>(fig.getPosition().x) - 280) / 70;
-    int y = (static_cast<int>(fig.getPosition().y) - 50) / 40;
-    if(field[y][x] == 3) {
-        bool change = !(abs(selectedFigure.x - x) < 2 && abs(selectedFigure.y - y) < 3);
+    if(field[pos.y][pos.x] == 3) {
+        bool change = !(abs(selectedFigure.x - pos.x) < 2 && abs(selectedFigure.y - pos.y) < 3);
         unselectFigure(change);
         if(turn == sf::Color::Blue) {
-            field[y][x] = 1;
+            field[pos.y][pos.x] = 1;
             if(!change)
                 blue++;
         }
         else {
-            field[y][x] = 2;
+            field[pos.y][pos.x] = 2;
             if(!change)
                 red++;
         }
-        captureFigures(fig);
+        captureFigures(pos);
         changeTurn();
-
+        if (noMoves())
+            end=true;
     } else
         std::cout << "YOU CANT MOVE HERE\n";
 }
 
-
-void Hexagon::unselectFigure(bool change) {
-    /**
-        Unselects figures in the end of the move
-        -finds figure that was selected
-        -uses chooseFigure to unselect figures
-        -if you moved your figure to 2 cells, removes your figure from previous position
-     */
-    for (sf::CircleShape & fig : figures){
-        if(fig.getOutlineColor() == sf::Color::Yellow){
-            chooseFigure(fig);
-            if(change){
-                fig.setFillColor(sf::Color::Black);
-                int x = (static_cast<int>(fig.getPosition().x) - 280) / 70;
-                int y = (static_cast<int>(fig.getPosition().y) - 50) / 40;
-                field[y][x] = 0;
-            }
-            break;
-        }
-    }
-}
-
-void Hexagon::captureFigures(sf::CircleShape &fig) {
+void Hexagon::captureFigures(sf::Vector2i pos) {
     /**
         Captures figures of opponent if your figure moves to a position near them
         -finds a positions in array, where you want to move
@@ -265,16 +247,18 @@ void Hexagon::captureFigures(sf::CircleShape &fig) {
         -adds points to you
         -removes points from your opponent
      */
-    int x = (static_cast<int>(fig.getPosition().x) - 280) / 70;
-    int y = (static_cast<int>(fig.getPosition().y) - 50) / 40;
-    for (int i = y - 2; i <= y + 2; ++i) {
-        for (int j = x - 1; j <= x + 1; ++j) {
+    for (int i = pos.y - 2; i <= pos.y + 2; ++i) {
+        if(i<0 || i>16)
+            continue;
+        for (int j = pos.x - 1; j <= pos.x + 1; ++j) {
+            if(j<0 || j>8 || (abs(pos.x - j) + abs(pos.y - i) > 2))
+                continue;
             if(turn == sf::Color::Blue && field[i][j] == 2) {
                 field[i][j] = 1;
-                    red--;
-                    blue++;
+                blue++;
+                red--;
             }
-            if(turn == sf::Color::Red && field[i][j] == 1) {
+            else if(turn == sf::Color::Red && field[i][j] == 1) {
                 field[i][j] = 2;
                 blue--;
                 red++;
@@ -291,6 +275,53 @@ void Hexagon::changeTurn() {
         turn = sf::Color::Red;
     else
         turn = sf::Color::Blue;
+}
+
+int Hexagon::countPoints(sf::Vector2i pos, bool clone) {
+    int points = 0;
+    for (int i = pos.y - 2; i <= pos.y + 2; ++i) {
+        if(i<0 || i>16)
+            continue;
+        for (int j = pos.x - 1; j <= pos.x + 1; ++j) {
+            if(j<0 || j>8 || (abs(pos.x - j) + abs(pos.y - i) > 2))
+                continue;
+            if(turn == sf::Color::Red && field[i][j] == 1) {
+                points++;
+            }
+        }
+    }
+    if(clone)
+        points++;
+    return points;
+}
+
+void Hexagon::computerTurn() {
+    sf::Vector2i move;
+    sf::CircleShape* select;
+    int possiblePoints = 0;
+    for(sf::CircleShape & fig : figures){
+        if(fig.getFillColor() == sf::Color::Red){
+            sf::Vector2i pos = findInArr(fig);
+            for (int i = pos.y-4; i <= pos.y+4; ++i) {
+                if(i<0 || i>16)
+                    continue;
+                for (int j = pos.x-2; j <= pos.x+2; ++j) {
+                    if(j<0 || j>8 || (abs(pos.x - j) + abs(pos.y - i) > 4))
+                        continue;
+                    if(field[i][j] == 3 || field[i][j] == 0){
+                        int points = countPoints({j,i}, (abs(pos.x - j) < 2 && abs(pos.y - i) < 3));
+                        if(points > possiblePoints){
+                            select = &fig;
+                            possiblePoints = points;
+                            move = {j,i};
+                        }
+                    }
+                }
+            }
+        }
+    }
+    selectFigure(*select);
+    makeMove(move);
 }
 
 int Hexagon::eventListener() {
@@ -312,9 +343,9 @@ int Hexagon::eventListener() {
                 for (sf::CircleShape &fig: figures) {
                     if (fig.getGlobalBounds().contains(mousePos)) {
                         if (isSelected && fig.getOutlineColor() != sf::Color::Yellow) {
-                            this->makeMove(fig);
+                            this->makeMove(findInArr(fig));
                         } else
-                            this->chooseFigure(fig);
+                            this->selectFigure(fig);
                     }
                 }
             } else{
@@ -328,7 +359,59 @@ int Hexagon::eventListener() {
     return 1;
 }
 
+void Hexagon::updateScore() {
+    /**
+        Updates score on the window
+     */
+    std::stringstream ss;
+    ss<<"Blue: " << this->blue <<"\n"
+      <<"Red: "<<this->red <<"\n";
+    this->texts.at(1).setString(ss.str());
+}
+
+void Hexagon::updateFigures() {
+    /**
+        Updates outlines and figure colors
+        -0 empty field
+        -1 blue figure
+        -2 red figure
+        -3 possible fields to move
+        -4 selected blue figure
+        -5 selected red figure
+     */
+    int idx = 0;
+    for (int i = 0; i < 17; ++i) {
+        for (int j = 0; j < 9; ++j) {
+            if(field[i][j] == 0)
+                figures.at(idx++).setOutlineColor(sf::Color::Transparent);
+            if(field[i][j] == 1)
+                figures.at(idx++).setFillColor(sf::Color::Blue);
+            if(field[i][j] == 2)
+                figures.at(idx++).setFillColor(sf::Color::Red);
+            if(field[i][j] == 3)
+                figures.at(idx++).setOutlineColor(sf::Color::Green);
+//            if(field[i][j] == 4 || field[i][j] == 5)
+//                figures.at(idx++).setOutlineColor(sf::Color::Yellow);
+        }
+    }
+}
+
+bool Hexagon::noMoves() {
+    for (sf::CircleShape & fig : figures){
+        if(fig.getFillColor() == turn) {
+            int moves = possibleMoves(findInArr(fig));
+            possibleMoves(findInArr(fig));
+            if (moves != 0)
+                return false;
+        }
+    }
+    return true;
+}
+
 void Hexagon::exitWindow(sf::RenderTarget & target) {
+    /**
+        Draws an exit window in the window
+     */
     target.draw(exitbg);
     target.draw(texts.at(2));
     target.draw(texts.at(3));
@@ -336,6 +419,12 @@ void Hexagon::exitWindow(sf::RenderTarget & target) {
 }
 
 void Hexagon::endGame(sf::RenderTarget & target) {
+    /**
+        Draws an end game window in the window
+        -checks who won a game
+        -changes the end game text
+        -draws end game components in the window
+     */
     if(blue == red) {
         texts.at(5).setString("Draw");
         texts.at(5).setFillColor(sf::Color(200, 0 ,250));
@@ -355,15 +444,9 @@ void Hexagon::endGame(sf::RenderTarget & target) {
 
 //Constructor and Destructor
 Hexagon::Hexagon() {
-    this->initvariables();
+    this->initVariables();
     this->initGUI();
     this->setPos();
-    for (int i = 0; i < 17; ++i) {
-        for (int j = 0; j < 9; ++j) {
-            std::cout<<field[i][j]<<"   ";
-        }
-        std::cout<<"\n";
-    }
 }
 
 Hexagon::~Hexagon() {
@@ -372,14 +455,23 @@ Hexagon::~Hexagon() {
 
 //Public functions
 void Hexagon::update(sf::Vector2f pos, int & state) {
+    /**
+        Updates components of the game
+     */
+    if(!player && turn == sf::Color::Red)
+        computerTurn();
     this->mousePos = pos;
     state = this->eventListener();
     this->updateScore();
     this->updateFigures();
-    end = (blue == 0 || red == 0 || blue+red == 58);
+    if (!end)
+        end = (blue == 0 || red == 0 || blue+red == 58);
 }
 
 void Hexagon::render(sf::RenderTarget &target) {
+    /**
+        Draws components of the game in the window
+     */
     target.draw(background);
     target.draw(texts.at(0));
     target.draw(texts.at(1));
@@ -393,9 +485,31 @@ void Hexagon::render(sf::RenderTarget &target) {
 }
 
 void Hexagon::eraseField() {
+    /**
+        Erases field in case to start a new game
+     */
     this->figures.erase(figures.begin(), figures.end());
-    this->initvariables();
+    this->initVariables();
     this->initGUI();
     this->setPos();
+
 }
+
+void Hexagon::setGameType(bool player) {
+    /**
+        Sets type of the game
+        -player vs player
+        -player vs computer
+     */
+    this->player = player;
+}
+
+void Hexagon::loadGame(int *arr[17][9]) {
+    for (int i=0; i<17; ++i){
+        for (int j = 0; j < 9; ++j) {
+            field[i][j] = *arr[i][j];
+        }
+    }
+}
+
 
