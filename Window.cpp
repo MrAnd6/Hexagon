@@ -11,7 +11,7 @@ void Window::initWindow() {
 
 void Window::initVariables() {
     this->window = nullptr;
-    this->state=0;
+    this->state=4;
 }
 
 void Window::eventListener() {
@@ -56,6 +56,11 @@ void Window::update() {
         switch(state){
             case 1:
                 this->hexagon.eraseField();
+                this->hexagon.setGameType(player);
+                break;
+            case 2:
+                this->saver.changeState(2);
+                break;
         }
         prevState = state;
     }
@@ -67,10 +72,15 @@ void Window::update() {
             this->hexagon.update(this->mousePos, this->state);
             break;
         case 2: //Load Game
+            this->saver.update(this->mousePos, this->state);
             break;
         case 3: //Score board
             break;
         case 4: //Chooser of game type
+            this->gameType.update(this->mousePos, this->state, this->player);
+            break;
+        case 5: //Save the game
+            this->saver.update(this->mousePos, this->state);
             break;
     }
 
@@ -94,20 +104,21 @@ void Window::render() {
         case 1: //Hexagon game
             this->hexagon.render(*this->window);
             break;
-        case 2: //Load Game
+        case 2 & 3: //2 for Load Game
+            this->saver.render(*this->window);
             break;
         case 3: //Score board
+
             break;
         case 4: //Chooser of game type
+            this->gameType.render(*this->window);
             break;
     }
 
     this->window->display();
 }
 
-void Window::changeState(int state) {
-    this->state=state;
-}
+
 
 
 

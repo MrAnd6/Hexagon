@@ -5,21 +5,26 @@
 
 #include "Menu.cpp"
 #include "Hexagon.cpp"
+#include "GameType.cpp"
 
 class Window {
 private:
     //Variables
-    sf::RenderWindow* window;
-    sf::VideoMode vm;
-    sf::Event ev;
     int state;
     int prevState;
     bool player;
+
+    //GUI components
+    sf::RenderWindow* window;
+    sf::VideoMode vm;
+    sf::Event ev;
     sf::Vector2f mousePos;
 
     //Objects of helping classes
     Menu menu;
     Hexagon hexagon;
+    GameType gameType;
+    Saver saver;
 
     //Private functions
     void initWindow();
@@ -39,10 +44,6 @@ public:
     //Functions
     void update();
     void render();
-    void changeState(int state);
-
-
-
 };
 
 
