@@ -2,12 +2,11 @@
 #ifndef HEXAGON_SAVER_H
 #define HEXAGON_SAVER_H
 
-#include <fstream>
+#include "Hexagon.cpp"
 
 class Saver {
 private:
     //Variables
-    std::vector<int> scores;
     int state;
     bool mouseHeld;
 
@@ -22,14 +21,14 @@ private:
     void initGUI();
     void eventListener();
     void setPos();
+    void loadGame();
+    void saveGame();
 public:
     //Cunstructor and Destructor
     Saver();
     ~Saver();
 
     //Public functions
-    int* loadGame();
-    static void saveGame();
     void update(sf::Vector2f pos, int & state);
     void render(sf::RenderTarget & target);
     void changeState(int state);
