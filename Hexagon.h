@@ -20,6 +20,8 @@ private:
 
     //GUI components
     sf::RectangleShape background;
+    sf::Texture bg;
+    sf::Texture gem;
     sf::RectangleShape exitbg;
     sf::RectangleShape endbg;
     sf::Vector2i selectedFigure;

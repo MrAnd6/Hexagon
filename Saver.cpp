@@ -9,7 +9,7 @@ void Saver::initVariables() {
 
 void Saver::initGUI() {
     bg.setSize({400,300});
-    bg.setFillColor(sf::Color(200, 0, 250));
+    bg.setFillColor(sf::Color(200, 0, 250, 120));
     if(!this->font.loadFromFile("CALIST.TTF"))
         std::cout << " ERROR::HEXAGON::FONT::COULD NOT LOAD FONT FROM FILE" << "\n";
     texts.push_back(sf::Text(font, "Quit", 30));
@@ -52,9 +52,9 @@ void Saver::update(sf::Vector2f pos, int & state) {
     this->eventListener();
     state = this->state;
     if(sf::Keyboard::isKeyPressed(sf::Keyboard::Enter)){
-        if(state == 2)
-            loadGame();
-        if(state == 5)
+        if(this->state == 2)
+            this->state = 1;
+        if(this->state == 5)
             saveGame();
     }
 }
@@ -95,6 +95,5 @@ void Saver::loadGame() {
         vec.push_back(var);
     }
     Hexagon::loadGame(vec);
-    this->state = 1;
 }
 

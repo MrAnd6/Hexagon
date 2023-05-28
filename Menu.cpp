@@ -29,7 +29,7 @@ void Menu::initMenu() {
         - changes menu color
      */
     this->mbg = sf::RectangleShape({800, 500});
-    this->mbg.setFillColor(sf::Color(200, 0, 250));
+    this->mbg.setFillColor(sf::Color(200, 0, 250, 120));
 }
 
 void Menu::setPos(sf::RenderTarget &target) {

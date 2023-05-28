@@ -21,7 +21,6 @@ private:
     void initGUI();
     void eventListener();
     void setPos();
-    void loadGame();
     void saveGame();
 public:
     //Cunstructor and Destructor
@@ -29,6 +28,7 @@ public:
     ~Saver();
 
     //Public functions
+    void loadGame();
     void update(sf::Vector2f pos, int & state);
     void render(sf::RenderTarget & target);
     void changeState(int state);

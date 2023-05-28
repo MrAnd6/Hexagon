@@ -56,8 +56,13 @@ void Hexagon::initGUI() {
         -upload font
         -initialize text
      */
+    if(!this->bg.loadFromFile("Space.png"))
+        std::cout << " ERROR::HEXAGON::TEXTURE::COULD NOT LOAD TEXTURE FROM FILE" << "\n";
+    if(!this->gem.loadFromFile("Gem.png"))
+        std::cout << " ERROR::HEXAGON::TEXTURE::COULD NOT LOAD TEXTURE FROM FILE" << "\n";
     this->background = sf::RectangleShape({1200, 800});
     this->background.setFillColor(sf::Color::White);
+    this->background.setTexture(&bg);
     for (int i = 0; i < 17; ++i) {
         for (int j = 0; j < 9; ++j) {
             if (field[i][j] == 1 || field[i][j] == 2 || field[i][j] == 0)
@@ -65,11 +70,11 @@ void Hexagon::initGUI() {
         }
     }
     this->exitbg.setSize({200,100});
-    this->exitbg.setFillColor(sf::Color::White);
+    this->exitbg.setFillColor(sf::Color(15,22,50));
     this->exitbg.setOutlineColor(sf::Color::Black);
     this->exitbg.setOutlineThickness(2);
     this->endbg.setSize({300,200});
-    this->endbg.setFillColor(sf::Color::White);
+    this->endbg.setFillColor(sf::Color(15,22,50));
     this->endbg.setOutlineColor(sf::Color::Black);
     this->endbg.setOutlineThickness(2);
     if(!this->font.loadFromFile("CALIST.TTF"))
@@ -82,7 +87,7 @@ void Hexagon::initGUI() {
     texts.push_back(sf::Text(font, "", 50));
     texts.push_back(sf::Text(font, "Menu", 30));
     for(sf::Text & text : texts)
-        text.setFillColor(sf::Color::Black);
+        text.setFillColor(sf::Color::White);
 }
 
 void Hexagon::newFigure() {
@@ -92,9 +97,10 @@ void Hexagon::newFigure() {
         -adds figures to the vector of figures
      */
     sf::CircleShape figure = sf::CircleShape(30,6);
-    figure.setOutlineThickness(7);
+    figure.setOutlineThickness(3);
     figure.setOutlineColor(sf::Color::Transparent);
     figure.setFillColor(sf::Color::Black);
+    figure.setTexture(&gem);
     figures.push_back(figure);
 }
 
@@ -121,9 +127,9 @@ void Hexagon::setPos() {
     this->texts.at(1).setPosition({50,700});
     this->exitbg.setPosition({950,50});
     this->endbg.setPosition({450, 300});
-    texts.at(2).setPosition({exitbg.getPosition().x+20, exitbg.getPosition().y+20});
-    texts.at(3).setPosition({exitbg.getPosition().x+50, exitbg.getPosition().y+70});
-    texts.at(4).setPosition({exitbg.getPosition().x+100, exitbg.getPosition().y+70});
+    texts.at(2).setPosition({exitbg.getPosition().x+30, exitbg.getPosition().y+20});
+    texts.at(3).setPosition({exitbg.getPosition().x+60, exitbg.getPosition().y+70});
+    texts.at(4).setPosition({exitbg.getPosition().x+110, exitbg.getPosition().y+70});
     texts.at(5).setPosition({500, 330});
     texts.at(6).setPosition({560, 400});
 }
@@ -460,7 +466,7 @@ void Hexagon::update(sf::Vector2f pos, int & state) {
     /**
         Updates components of the game
      */
-    if(!player && turn == sf::Color::Red)
+    if(!player && turn == sf::Color::Red && !end)
         computerTurn();
     this->mousePos = pos;
     state = this->eventListener();

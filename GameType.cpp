@@ -8,7 +8,7 @@ void GameType::initVariables() {
 
 void GameType::initGUI() {
     this->background = sf::RectangleShape({500,400});
-    this->background.setFillColor(sf::Color(200, 0, 250));
+    this->background.setFillColor(sf::Color(200, 0, 250, 120));
     if(!this->font.loadFromFile("CALIST.TTF"))
         std::cout << " ERROR::GAMETYPE::FONT::COULD NOT LOAD FONT FROM FILE" << "\n";
     this->texts.push_back(sf::Text(font, "Choose game type", 50));

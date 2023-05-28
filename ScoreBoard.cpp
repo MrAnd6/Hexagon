@@ -10,7 +10,7 @@ void ScoreBoard::initVariables() {
 
 void ScoreBoard::initGUI() {
      this->bg.setSize({800, 500});
-     this->bg.setFillColor(sf::Color(200,0,250));
+     this->bg.setFillColor(sf::Color(200,0,250, 120));
      if(!this->font.loadFromFile("CALIST.TTF"))
         std::cout << " ERROR::SCOREBOARD::FONT::COULD NOT LOAD FONT FROM FILE" << "\n";
      this->texts.push_back(sf::Text(font, "Quit",40));

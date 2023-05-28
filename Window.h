@@ -20,6 +20,8 @@ private:
     sf::VideoMode vm;
     sf::Event ev;
     sf::Vector2f mousePos;
+    sf::Texture texture;
+    sf::RectangleShape bg;
 
     //Objects of helping classes
     Menu menu;
@@ -29,7 +31,7 @@ private:
     ScoreBoard scores;
 
     //Private functions
-    void initWindow();
+    void initGUI();
     void initVariables();
     void eventListener();
     void updateMousePos();
