@@ -3,19 +3,15 @@
 #ifndef HEXAGON_HEXAGON_H
 #define HEXAGON_HEXAGON_H
 
-#include <SFML/Graphics.hpp>
-#include <SFML/Window.hpp>
-#include <SFML/System.hpp>
-#include <sstream>
-#include <cmath>
-#include "Saver.cpp"
+#include <iostream>
+#include "ScoreBoard.cpp"
 
 class Hexagon {
 private:
     //Variables
-    int field[17][9];
-    int blue;
-    int red;
+    static int field[17][9];
+    static int blue;
+    static int red;
     bool player;
     bool quit;
     bool mouseHeld;
@@ -65,7 +61,8 @@ public:
     void setGameType(bool player);
     void update(sf::Vector2f pos, int & state);
     void render(sf::RenderTarget & target);
-    void loadGame(int *arr[17][9]);
+    static void loadGame(std::vector<int> vec);
+    static std::vector<int> getField();
 };
 
 

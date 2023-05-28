@@ -1,5 +1,9 @@
 
 #include "Hexagon.h"
+
+int Hexagon::field[17][9];
+int Hexagon::blue;
+int Hexagon::red;
 //Private functions
 void Hexagon::initVariables() {
     /**
@@ -331,7 +335,7 @@ int Hexagon::eventListener() {
             if(!end){
                 if (quit) {
                     if (texts.at(3).getGlobalBounds().contains(mousePos))
-                        return 1;
+                        return 5;
                     else if (texts.at(4).getGlobalBounds().contains(mousePos)) {
                         quit = false;
                         return 0;
@@ -350,7 +354,7 @@ int Hexagon::eventListener() {
                 }
             } else{
                 if (this->texts.at(6).getGlobalBounds().contains(mousePos)){
-                    //write to file results
+                    ScoreBoard::save({blue, red});
                     return 0;
                 }
             }
@@ -390,8 +394,6 @@ void Hexagon::updateFigures() {
                 figures.at(idx++).setFillColor(sf::Color::Red);
             if(field[i][j] == 3)
                 figures.at(idx++).setOutlineColor(sf::Color::Green);
-//            if(field[i][j] == 4 || field[i][j] == 5)
-//                figures.at(idx++).setOutlineColor(sf::Color::Yellow);
         }
     }
 }
@@ -426,7 +428,7 @@ void Hexagon::endGame(sf::RenderTarget & target) {
         -draws end game components in the window
      */
     if(blue == red) {
-        texts.at(5).setString("Draw");
+        texts.at(5).setString("   Draw");
         texts.at(5).setFillColor(sf::Color(200, 0 ,250));
     }
     else if(blue>red) {
@@ -504,12 +506,27 @@ void Hexagon::setGameType(bool player) {
     this->player = player;
 }
 
-void Hexagon::loadGame(int *arr[17][9]) {
+void Hexagon::loadGame(std::vector<int> vec) {
+    int idx = 0;
+    blue = vec.at(idx++);
+    red = vec.at(idx++);
     for (int i=0; i<17; ++i){
         for (int j = 0; j < 9; ++j) {
-            field[i][j] = *arr[i][j];
+            field[i][j] = vec.at(idx++);
         }
     }
+}
+
+std::vector<int> Hexagon::getField() {
+    std::vector<int> vec;
+    vec.push_back(blue);
+    vec.push_back(red);
+    for (int i = 0; i < 17; ++i) {
+        for (int j = 0; j < 9; ++j) {
+            vec.push_back(field[i][j]);
+        }
+    }
+    return vec;
 }
 
 
