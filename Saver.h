@@ -7,14 +7,14 @@
 class Saver {
 private:
     //Variables
-    int state;
-    bool mouseHeld;
+    int state;                      ///Current saver state
+    bool mouseHeld;                 ///Flag indicating if mouse button is held
 
     //GUI components
-    sf::RectangleShape bg;
-    std::vector<sf::Text> texts;
-    sf::Vector2f mousePos;
-    sf::Font font;
+    sf::RectangleShape bg;          ///Background shape for loading or saving the game
+    std::vector<sf::Text> texts;    ///Vector of texts components
+    sf::Vector2f mousePos;          ///Vector of mouse position relative to the window
+    sf::Font font;                  ///Font for the saver texts
 
     //Private functions
     void initVariables();

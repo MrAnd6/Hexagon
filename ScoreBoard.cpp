@@ -1,16 +1,25 @@
 
 #include "ScoreBoard.h"
+/**
+ * \brief Implementation of static variables
+ */
 std::vector<int> ScoreBoard::scores;
-//Private functions
 
+///Private functions
 void ScoreBoard::initVariables() {
+    /**
+     * \brief Initializes default values of variables
+     */
     this->read();
     this->mouseHeld = false;
 }
 
 void ScoreBoard::initGUI() {
+    /**
+     * \brief Initializes GUI components
+     */
      this->bg.setSize({800, 500});
-     this->bg.setFillColor(sf::Color(200,0,250, 120));
+     this->bg.setFillColor(sf::Color(147,9,220, 200));
      if(!this->font.loadFromFile("CALIST.TTF"))
         std::cout << " ERROR::SCOREBOARD::FONT::COULD NOT LOAD FONT FROM FILE" << "\n";
      this->texts.push_back(sf::Text(font, "Quit",40));
@@ -22,6 +31,9 @@ void ScoreBoard::initGUI() {
 }
 
 void ScoreBoard::setPos() {
+    /**
+     * \brief Sets positions of GUI components
+     */
     this->bg.setPosition({200,150});
     this->texts.at(0).setPosition({220,170});
     this->texts.at(1).setPosition({480,180});
@@ -30,6 +42,11 @@ void ScoreBoard::setPos() {
 }
 
 int ScoreBoard::eventListener() {
+    /**
+     * \brief Listens for mouse event happened
+     *
+     * \return Value that changes state in Window class
+     */
     if(sf::Mouse::isButtonPressed(sf::Mouse::Left)){
         if(!mouseHeld){
             mouseHeld = true;
@@ -41,6 +58,9 @@ int ScoreBoard::eventListener() {
 }
 
 void ScoreBoard::read() {
+    /**
+     * \brief Reads scores from the file
+     */
     this->scores.erase(scores.begin(), scores.end());
     std::fstream file;
     file.open("Scores", std::ios_base::in);
@@ -55,6 +75,9 @@ void ScoreBoard::read() {
 }
 
 void ScoreBoard::write() {
+    /**
+     * \brief Writes scores to the file
+     */
     std::fstream file;
     file.open("Scores", std::ios_base::out);
     std::remove("Scores");
@@ -63,6 +86,12 @@ void ScoreBoard::write() {
 }
 
 void ScoreBoard::updateScores() {
+    /**
+     * \brief Updates texts that lists scores on the screen
+     *
+     * Using string stream reads scores from scores vector and
+     * updates texts that are listing them on the screen
+     */
     std::stringstream ssb;
     std::stringstream ssr;
     ssb<<"Blue:\n";
@@ -77,19 +106,36 @@ void ScoreBoard::updateScores() {
     texts.at(3).setString(ssr.str());
 }
 
-//Constructor and Destructor
+///Constructor and Destructor
 ScoreBoard::ScoreBoard() {
+    /**
+     * \brief Default constructor
+     *
+     * Using other methods initializes and sets default values and positions
+     */
     this->initGUI();
     this->initVariables();
     this->setPos();
 }
 
 ScoreBoard::~ScoreBoard() {
+    /**
+     * \brief Destructor
+     */
     delete this;
 }
 
 //Public functions
 void ScoreBoard::save(sf::Vector2i result) {
+    /**
+     * \brief Saves result
+     *
+     * \param result Vector with results
+     *
+     * Adds new results to the vector with them if it has less that 5 results or
+     * if new results have a greater difference than the previous, then
+     * calls write() method to write new result into file
+     */
     for (int i = 0; i < 10;) {
         if(scores.size() < 10){
             scores.push_back(result.x);
@@ -99,7 +145,8 @@ void ScoreBoard::save(sf::Vector2i result) {
         else{
             int dif = abs(scores.at(i) - scores.at(i+1));
             if (dif < abs(result.x - result.y)){
-                scores.erase(scores.begin()+i,scores.begin()+i+1);
+                scores.erase(scores.begin()+i);
+                scores.erase(scores.begin()+i+1);
                 scores.push_back(result.x);
                 scores.push_back(result.y);
                 break;
@@ -111,6 +158,12 @@ void ScoreBoard::save(sf::Vector2i result) {
 }
 
 void ScoreBoard::update(sf::Vector2f pos, int &state) {
+    /**
+     * \brief Updates state and updates scores
+     *
+     * \param pos Mouse position
+     * \param state State from Window class
+     */
     this->mousePos = pos;
     state = this->eventListener();
     this->updateScores();
@@ -118,6 +171,11 @@ void ScoreBoard::update(sf::Vector2f pos, int &state) {
 }
 
 void ScoreBoard::render(sf::RenderTarget &target) {
+    /**
+     * \brief Renders GUI components in the window
+     *
+     * \param target Target where components are drawn
+     */
     target.draw(this->bg);
     for(sf::Text & text : texts)
         target.draw(text);

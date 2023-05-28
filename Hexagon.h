@@ -8,32 +8,31 @@
 
 class Hexagon {
 private:
-    //Variables
-    static int field[17][9];
-    static int blue;
-    static int red;
-    bool player;
-    bool quit;
-    bool mouseHeld;
-    bool isSelected;
-    bool end;
+    ///Variables
+    static int field[17][9];                ///Static array representing the game board
+    static int blue;                        ///Number representing amount of blue figures
+    static int red;                         ///Number representing amount of red figures
+    bool player;                            ///Flag indicating who is playing
+    bool quit;                              ///Flag indicating if player wants to quit
+    bool mouseHeld;                         ///Flag indicating if mouse button is held
+    bool isSelected;                        ///Flag indicating if figure is selected now
+    bool end;                               ///Flag indicating if the game has ended
 
-    //GUI components
-    sf::RectangleShape background;
-    sf::Texture bg;
-    sf::Texture gem;
-    sf::RectangleShape exitbg;
-    sf::RectangleShape endbg;
-    sf::Vector2i selectedFigure;
-    std::vector<sf::CircleShape> figures;
-    std::vector<sf::Text> texts;
-    sf::CircleShape chosen;
-    sf::Vector2f mousePos;
-    sf::Font font = sf::Font();
-    sf::Color turn;
+    ///GUI components
+    sf::RectangleShape background;          ///Background shape for the game
+    sf::Texture bg;                         ///Texture for the background
+    sf::Texture gem;                        ///Texture for the figures
+    sf::RectangleShape exitbg;              ///Background for the exit window
+    sf::RectangleShape endbg;               ///Background for the end game window
+    sf::Vector2i selectedFigure;            ///Index of the selected game piece in the field array.
+    std::vector<sf::CircleShape> figures;   ///Vector of figures
+    std::vector<sf::Text> texts;            ///Vector of texts
+    sf::Vector2f mousePos;                  ///Vector of mouse position relative to the window
+    sf::Font font = sf::Font();             ///Font for the game texts
+    sf::Color turn;                         ///Color representing current turn
 
 
-    //Private functions
+    ///Private functions
     void initVariables();
     void initGUI();
     void setPos();
@@ -54,11 +53,11 @@ private:
     void computerTurn();
     bool noMoves();
 public:
-    //Constructor and Destructor
+    ///Constructor and Destructor
     Hexagon();
     ~Hexagon();
 
-    //Public functions
+    ///Public functions
     void eraseField();
     void setGameType(bool player);
     void update(sf::Vector2f pos, int & state);

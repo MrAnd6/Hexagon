@@ -8,26 +8,29 @@
 #include <vector>
 class Menu {
 private:
-    //Variables
-    sf::RectangleShape mbg;
-    sf::Text menu;
-    std::vector<sf::Text> texts;
-    sf::Font font = sf::Font();
-    sf::Vector2f mousePos;
-    bool mouseHeld=false;
+    ///Variables
+    bool mouseHeld=false;           ///Flag indicating if the mouse button is held
 
-    //Private functions
+    ///GUI components
+    sf::RectangleShape mbg;         ///Background shape for the menu
+    sf::Text menu;                  ///Text for the menu title
+    std::vector<sf::Text> texts;    ///Vector of menu option texts
+    sf::Font font = sf::Font();     ///Font for the menu texts
+    sf::Vector2f mousePos;          ///Vector of mouse position relative to the window
+
+
+    ///Private functions
     void initTexts();
     void initMenu();
     void setPos(sf::RenderTarget & target);
     int eventListener();
 
 public:
-    //Constructor and destructor
+    ///Constructor and destructor
     Menu();
     ~Menu();
 
-    //Public functions
+    ///Public functions
     void update(sf::Vector2f pos, int & state);
     void render(sf::RenderTarget & target);
 

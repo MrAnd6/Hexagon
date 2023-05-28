@@ -12,14 +12,14 @@
 class ScoreBoard {
 private:
     //Variables
-    static std::vector<int> scores;
-    bool mouseHeld;
+    static std::vector<int> scores; ///Static vector to store the scores
+    bool mouseHeld;                 ///Flag indicating if mouse button is held
 
     //GUI components
-    sf::RectangleShape bg;
-    sf::Font font;
-    std::vector<sf::Text> texts;
-    sf::Vector2f mousePos;
+    sf::RectangleShape bg;          ///Background shape for the score board
+    sf::Font font;                  ///Font for the score board texts
+    std::vector<sf::Text> texts;    ///Vector of text components
+    sf::Vector2f mousePos;          ///Vector of mouse position relative to the window
 
     //Private functions
     void initVariables();

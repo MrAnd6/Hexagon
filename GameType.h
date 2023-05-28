@@ -10,13 +10,13 @@
 class GameType {
 private:
     //Variables
-    bool mouseHeld;
+    bool mouseHeld;                 ///Flag indicating if mouse button is held
 
     //GUI components
-    sf::RectangleShape background;
-    std::vector<sf::Text> texts;
-    sf::Vector2f mousePos;
-    sf::Font font = sf::Font();
+    sf::RectangleShape background;  ///Background shape for the game type choosing
+    std::vector<sf::Text> texts;    ///Vector of text components
+    sf::Vector2f mousePos;          ///Vector of mouse position relative to the window
+    sf::Font font = sf::Font();     ///Font for the game type choosing texts
 
     //Private functions
     void initVariables();
