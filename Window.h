@@ -4,8 +4,9 @@
 #define HEXAGON_WINDOW_H
 
 #include "Menu.cpp"
-#include "Hexagon.cpp"
+//#include "Hexagon.cpp"
 #include "GameType.cpp"
+#include "Saver.cpp"
 
 class Window {
 private:
@@ -25,6 +26,7 @@ private:
     Hexagon hexagon;
     GameType gameType;
     Saver saver;
+    ScoreBoard scores;
 
     //Private functions
     void initWindow();

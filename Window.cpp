@@ -55,11 +55,17 @@ void Window::update() {
     if(prevState != state){
         switch(state){
             case 1:
-                this->hexagon.eraseField();
+                if(prevState != 2)
+                    this->hexagon.eraseField();
                 this->hexagon.setGameType(player);
                 break;
-            case 2:
+            case 2: {
                 this->saver.changeState(2);
+            }
+                break;
+            case 5: {
+                this->saver.changeState(5);
+            }
                 break;
         }
         prevState = state;
@@ -75,6 +81,7 @@ void Window::update() {
             this->saver.update(this->mousePos, this->state);
             break;
         case 3: //Score board
+            this->scores.update(this->mousePos, this->state);
             break;
         case 4: //Chooser of game type
             this->gameType.update(this->mousePos, this->state, this->player);
@@ -104,14 +111,17 @@ void Window::render() {
         case 1: //Hexagon game
             this->hexagon.render(*this->window);
             break;
-        case 2 & 3: //2 for Load Game
+        case 2: //Load Game
             this->saver.render(*this->window);
             break;
         case 3: //Score board
-
+            this->scores.render(*this->window);
             break;
         case 4: //Chooser of game type
             this->gameType.render(*this->window);
+            break;
+        case 5://Save game
+            this->saver.render(*this->window);
             break;
     }
 
