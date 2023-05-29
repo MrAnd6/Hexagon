@@ -4,17 +4,11 @@
 
 ///Private functions
 void Window::initVariables() {
-    /**
-     * \brief Initializes default values of variables
-     */
     this->window = nullptr;
     this->state=4;
 }
 
 void Window::initGUI() {
-    /**
-     * \brief Initializes GUI components
-     */
     this->vm.size = sf::Vector2u{1200,800};
     this->window = new sf::RenderWindow(this->vm, "Hexxagon", sf::Style::Close | sf::Style::Titlebar);
     this->window->setFramerateLimit(60);
@@ -26,9 +20,6 @@ void Window::initGUI() {
 }
 
 void Window::eventListener() {
-    /**
-     * \brief Listens if window was closed
-     */
     while(this->window->pollEvent(this->ev)){
         switch (this->ev.type) {
             case sf::Event::Closed: //Close button pressed
@@ -40,45 +31,26 @@ void Window::eventListener() {
 }
 
 void Window::updateMousePos() {
-    /**
-     * \brief Updates mouse position
-     */
     sf::Vector2i pos = sf::Mouse::getPosition(*this->window);
     this->mousePos = this->window->mapPixelToCoords(pos);
 }
 
 ///Constructor and destructor
 Window::Window(){
-    /**
-     * \brief Default constructor
-     */
     this->initVariables();
     this->initGUI();
 }
 
 Window::~Window() {
-    /**
-     * \brief Destructor
-     */
     delete this->window;
 }
 
 ///Public functions
 bool Window::working() const {
-    /**
-     * \brief Checks if window is opened
-     *
-     * \return True if window is opened and false if opposite
-     */
     return this->window->isOpen();
 }
 
 void Window::update() {
-    /**
-     * \brief Updates window
-     *
-     * Updates window based on current state, checks if state changed and in some situation calls necessary methods
-     */
     this->updateMousePos();
     this->eventListener();
     if(prevState != state){
@@ -122,12 +94,6 @@ void Window::update() {
 }
 
 void Window::render() {
-    /**
-     * \brief Renders objects
-     *
-     * Renders components based on current state
-     */
-
     this->window->clear();
     if(this->state != 1)
         this->window->draw(bg);

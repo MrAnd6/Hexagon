@@ -3,16 +3,10 @@
 
 ///Private functions
 void GameType::initVariables() {
-    /**
-     * \brief Initializes default values of variables
-     */
     this->mouseHeld = false;
 }
 
 void GameType::initGUI() {
-    /**
-     * \brief Initializes GUI components
-     */
     this->background = sf::RectangleShape({500,400});
     this->background.setFillColor(sf::Color(147,9,220, 200));
     if(!this->font.loadFromFile("CALIST.TTF"))
@@ -25,9 +19,6 @@ void GameType::initGUI() {
 }
 
 void GameType::setPos() {
-    /**
-     * \brief Sets positions of GUI components
-     */
     this->background.setPosition({350, 200});
     this->texts.at(0).setPosition({400,230});
     this->texts.at(1).setPosition({480, 340});
@@ -35,11 +26,6 @@ void GameType::setPos() {
 }
 
 int GameType::actionListener() {
-    /**
-     * \brief Listens for mouse event happened
-     *
-     * \return Value that sets game type
-     */
     if(sf::Mouse::isButtonPressed(sf::Mouse::Left)){
         if (!mouseHeld){
             mouseHeld = true;
@@ -55,32 +41,17 @@ int GameType::actionListener() {
 
 ///Constructor and destructor
 GameType::GameType() {
-    /**
-     * \brief Default constructor
-     *
-     * Using other methods initializes and sets default values and positions
-     */
     this->initVariables();
     this->initGUI();
     this->setPos();
 }
 
 GameType::~GameType() {
-    /**
-     * \brief Destructor
-     */
     delete this;
 }
 
 ///Public functions
 void GameType::update(sf::Vector2f pos, int & state, bool & player) {
-    /**
-     * \brief Updates state and which game type was chosen
-     *
-     * \param pos Mouse position
-     * \param state State from the Window class
-     * \param player Variable from Window class that is used to check who will play(player or computer)
-     */
     this->mousePos = pos;
     int type = actionListener();
     if(type == 2){
@@ -94,11 +65,6 @@ void GameType::update(sf::Vector2f pos, int & state, bool & player) {
 }
 
 void GameType::render(sf::RenderTarget & target) {
-    /**
-     * \brief Draws menu components
-     *
-     * \param target Target where components are drawn
-     */
     target.draw(background);
     for(sf::Text & text : texts)
         target.draw(text);

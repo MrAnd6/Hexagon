@@ -30,19 +30,59 @@ private:
     ScoreBoard scores;          ///ScoreBoard object for saving and listing scores
 
     ///Private functions
+    /**
+     * \brief Initializes default values of variables
+     */
     void initGUI();
+
+    /**
+     * \brief Initializes GUI components
+     */
     void initVariables();
+
+    /**
+     * \brief Listens if window was closed
+     */
     void eventListener();
+
+    /**
+     * \brief Updates mouse position
+     */
     void updateMousePos();
 
 public:
     ///Constructor and destructor
+
+    /**
+     * \brief Default constructor
+     */
     Window();
+
+    /**
+     * \brief Destructor
+     */
     ~Window();
 
     ///Public functions
+    /**
+     * \brief Checks if window is opened
+     *
+     * \return True if window is opened and false if opposite
+     */
     bool working() const;
+
+    /**
+     * \brief Updates window
+     *
+     * Updates window based on current state, checks if state changed and in some situation calls necessary methods
+     */
     void update();
+
+    /**
+     * \brief Renders objects
+     *
+     * Renders components based on current state
+     */
     void render();
 };
 

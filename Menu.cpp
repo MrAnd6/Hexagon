@@ -3,9 +3,6 @@
 
 ///Private functions
 void Menu::initTexts() {
-    /**
-     * \brief Initializes texts
-     */
     if(!this->font.loadFromFile("CALIST.TTF"))
         std::cout << " ERROR::MENU::FONT::COULD NOT LOAD FONT FROM FILE" << "\n";
     this->menu = sf::Text(font, "Menu", 40);
@@ -19,19 +16,11 @@ void Menu::initTexts() {
 }
 
 void Menu::initMenu() {
-    /**
-     * \brief Initializes menu background
-     */
     this->mbg = sf::RectangleShape({800, 500});
     this->mbg.setFillColor(sf::Color(147,9,220, 200));
 }
 
 void Menu::setPos(sf::RenderTarget &target) {
-    /**
-     * Sets positions of GUI components
-     *
-     * \param target Target where components are drawn
-     */
     float x = target.getSize().x/2 - mbg.getSize().x / 2;
     float y = target.getSize().y/2 - mbg.getSize().y / 2;
     this->mbg.setPosition({x, y});
@@ -42,11 +31,6 @@ void Menu::setPos(sf::RenderTarget &target) {
     }
 }
 int Menu::eventListener() {
-    /**
-     * \brief Listens for mouse event happened
-     *
-     * \return Value that changes state in Window class
-     */
     if(sf::Mouse::isButtonPressed(sf::Mouse::Left)){
         if(!mouseHeld){
             mouseHeld = true;
@@ -68,40 +52,21 @@ int Menu::eventListener() {
 
 ///Constructor and destructor
 Menu::Menu() : menu(font){
-    /**
-     * \brief Default constructor
-     *
-     * Using other methods initializes and sets default values and positions
-     */
     this->initTexts();
     this->initMenu();
 }
 
 Menu::~Menu() {
-    /**
-     * \brief Destructor
-     */
     delete this;
 }
 
 ///Public functions
 void Menu::update(sf::Vector2f pos, int & state) {
-    /**
-     * \brief Updates mouse position and state
-     *
-     * \param pos Mouse position
-     * \param state State from Window class
-     */
     this->mousePos = pos;
     state = this->eventListener();
 }
 
 void Menu::render(sf::RenderTarget & target) {
-    /**
-     * \brief Draws menu components
-     *
-     * \param target Target where components are drawn
-     */
     this->setPos(target);
     target.draw(mbg);
     target.draw(menu);

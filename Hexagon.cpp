@@ -8,9 +8,6 @@ int Hexagon::blue;
 int Hexagon::red;
 ///Private functions
 void Hexagon::initVariables() {
-    /**
-     * \brief Initializes starting values
-     */
     for (int i = 0; i < 17; ++i) {
         for (int j = 0; j < 9; ++j) {
             if((i+j) % 2 == 0) {
@@ -46,9 +43,6 @@ void Hexagon::initVariables() {
 }
 
 void Hexagon::initGUI() {
-    /**
-     * \brief Initializes GUI elements of hexagon game
-     */
     if(!this->bg.loadFromFile("Space.png"))
         std::cout << " ERROR::HEXAGON::TEXTURE::COULD NOT LOAD TEXTURE FROM FILE" << "\n";
     if(!this->gem.loadFromFile("Gem.png"))
@@ -84,13 +78,6 @@ void Hexagon::initGUI() {
 }
 
 void Hexagon::newFigure() {
-    /**
-     * \brief Creates new figures
-     *
-     * Creates a circle shape with 6 corners,
-     * sets default parameters and adds a texture,
-     * then adds figure to the vector of figures
-     */
     sf::CircleShape figure = sf::CircleShape(30,6);
     figure.setOutlineThickness(3);
     figure.setOutlineColor(sf::Color::Transparent);
@@ -100,13 +87,6 @@ void Hexagon::newFigure() {
 }
 
 void Hexagon::setPos() {
-    /**
-     * \brief Sets a positions of all the elements
-     *
-     * Uses 2 for loops to set figures positions
-     * so they will be on the same distance from
-     * each other. Sets a positions of other elements
-     */
     int idx = 0;
     float x = 280;
     float y = 50;
@@ -132,26 +112,10 @@ void Hexagon::setPos() {
 }
 
 sf::Vector2i Hexagon::findInArr(sf::CircleShape & fig) {
-    /**
-     * \brief Finds a position of figure on the screen in array of ints
-     *
-     * \param fig Circle shape - figure that you want to find
-     *
-     * \return Vector with 2 ints - column and line in array
-     */
     return sf::Vector2i{(static_cast<int>(fig.getPosition().x) - 280) / 70, (static_cast<int>(fig.getPosition().y) - 50) / 40};
 }
 
  void Hexagon::selectFigure(sf::CircleShape & fig) {
-    /**
-     * \brief Adds or removes a selection on the figure that you have chosen
-     *
-     * Checks if you can select this figure, changes it out line color
-     * to show that it is selected or not
-     *
-     * \param fig The figure you clicked on
-     */
-
     if(fig.getFillColor() != this->turn)
         std::cout << "ITS NOT YOUR FIGURE!\n";
     else {
@@ -169,17 +133,6 @@ sf::Vector2i Hexagon::findInArr(sf::CircleShape & fig) {
 }
 
 int Hexagon::possibleMoves(sf::Vector2i pos) {
-    /**
-     * \brief Finds possible positions where you can moke a move
-     *
-     * \param pos A vector with 2 ints which are positions of your figure in array
-     *
-     * This function takes a vector with 2 ints. Using two for loops finds
-     * empty fields where you able to move your figure and counts how many
-     * moves you can make, then returns amount of moves
-     *
-     * \return Amount of possible moves
-     */
     int moves = 0;
     for (int i = pos.y-4; i <= pos.y+4; ++i) {
         if(i<0 || i>16)
@@ -203,16 +156,6 @@ int Hexagon::possibleMoves(sf::Vector2i pos) {
 }
 
 void Hexagon::unselectFigure(bool change) {
-    /**
-     * \brief Finds selected figure
-     *
-     * \param Change Does it need to replace a figure to an empty cell
-     *
-     * Using enhanced for loop searches for figure that has selection,
-     * calls selectFigure() method which removes a selection,
-     * then if change is true makes figure as an empty cell
-     * with changing its color to Black and replacing it in array
-     */
     for (sf::CircleShape & fig : figures){
         if(fig.getOutlineColor() == sf::Color::Yellow){
             selectFigure(fig);
@@ -227,17 +170,6 @@ void Hexagon::unselectFigure(bool change) {
 }
 
 void Hexagon::makeMove(sf::Vector2i pos) {
-    /**
-     * \brief Makes a move
-     *
-     * \param pos Vector of 2 ints that is a position where you want to move to
-     *
-     * Takes a position where want to move your figure. Checks if you can move here,
-     * checks if you moving on 2 cells, uses unselectFigure() method to remove
-     * selection, replaces in array empty cell to your figure, adds points to you if needed,
-     * uses captureFigures() method to capture opponent figures, changes turn to opponent,
-     * then uses noMoves() to check if your opponent can move
-     */
     if(field[pos.y][pos.x] == 3) {
         bool change = !(abs(selectedFigure.x - pos.x) < 2 && abs(selectedFigure.y - pos.y) < 3);
         unselectFigure(change);
@@ -259,14 +191,6 @@ void Hexagon::makeMove(sf::Vector2i pos) {
 }
 
 void Hexagon::captureFigures(sf::Vector2i pos) {
-    /**
-     * \brief Captures opponent figures
-     *
-     * \param pos Vector with 2 ints which are a position where you moved your figure
-     *
-     * Takes a vector with the position in array of the cell where you moved. Finds if you
-     * have near you opponent figures, than replaces them to yours and adds points to you
-     */
     for (int i = pos.y - 2; i <= pos.y + 2; ++i) {
         if(i<0 || i>16)
             continue;
@@ -289,9 +213,6 @@ void Hexagon::captureFigures(sf::Vector2i pos) {
 }
 
 void Hexagon::changeTurn() {
-    /**
-     * \brief Changes turn
-     */
     if(turn == sf::Color::Blue)
         turn = sf::Color::Red;
     else
@@ -299,18 +220,6 @@ void Hexagon::changeTurn() {
 }
 
 int Hexagon::countPoints(sf::Vector2i pos, bool clone) {
-    /**
-     * \brief Count how many points can be earned
-     *
-     * \param pos Vector with 2 ints of position to move to
-     * \param clone If figure clones
-     *
-     * \return Amount of possible points
-     *
-     * Takes a position of theoretical figure place, finds if it will capture
-     * opponent figures and counts how many point will be received, adds a point
-     * if figure will be cloned, then returns an amount of possible points
-     */
     int points = 0;
     for (int i = pos.y - 2; i <= pos.y + 2; ++i) {
         if(i<0 || i>16)
@@ -329,14 +238,6 @@ int Hexagon::countPoints(sf::Vector2i pos, bool clone) {
 }
 
 void Hexagon::computerTurn() {
-    /**
-     * \brief Calculates a move of the computer
-     *
-     * Using enhanced for loop finds figure that can be moved, finds possible positions
-     * where it can be moved, using countPoints() method finds how many points can be earned,
-     * finds the move where computer gets the most points, then makes this move using
-     * selectFigure() and makeMove() methods
-     */
     sf::Vector2i move;
     sf::CircleShape* select;
     int possiblePoints = 0;
@@ -366,16 +267,6 @@ void Hexagon::computerTurn() {
 }
 
 int Hexagon::eventListener() {
-    /**
-     * \brief Listens for mouse event happened
-     *
-     * \return Value that changes state in Window class
-     *
-     * Checks if left mouse button is pressed and not held,
-     * checks which components can be clicked, finds on what
-     * component you clicked, then returns a value that is a
-     * value of state on which it needs to be changed
-     */
     if(sf::Mouse::isButtonPressed(sf::Mouse::Left)){
         if(!mouseHeld){
             mouseHeld = true;
@@ -412,12 +303,6 @@ int Hexagon::eventListener() {
 }
 
 void Hexagon::updateScore() {
-    /**
-     * \brief Updates score on the screen
-     *
-     * Using string stream makes a string with scores,
-     * then updates text with scores on the screen
-     */
     std::stringstream ss;
     ss<<"Blue: " << this->blue <<"\n"
       <<"Red: "<<this->red <<"\n";
@@ -425,12 +310,6 @@ void Hexagon::updateScore() {
 }
 
 void Hexagon::updateFigures() {
-    /**
-     * \brief Updates figures outlines and colors
-     *
-     * Using 2 for loops finds values of gaming components and updates
-     * figures outlines and color in vector of them
-     */
     int idx = 0;
     for (int i = 0; i < 17; ++i) {
         for (int j = 0; j < 9; ++j) {
@@ -447,14 +326,6 @@ void Hexagon::updateFigures() {
 }
 
 bool Hexagon::noMoves() {
-    /**
-     * \brief Checks if there are possible moves
-     *
-     * \return Possibility of moving
-     *
-     * Finds figures of turn color, using possibleMoves() method finds
-     * how many moves you can do, returns if there are possible moves
-     */
     for (sf::CircleShape & fig : figures){
         if(fig.getFillColor() == turn) {
             int moves = possibleMoves(findInArr(fig));
@@ -467,11 +338,6 @@ bool Hexagon::noMoves() {
 }
 
 void Hexagon::exitWindow(sf::RenderTarget & target) {
-    /**
-     * \brief Draws components of exit window
-     *
-     * \param target Target where components are drawn
-     */
     target.draw(exitbg);
     target.draw(texts.at(2));
     target.draw(texts.at(3));
@@ -479,13 +345,6 @@ void Hexagon::exitWindow(sf::RenderTarget & target) {
 }
 
 void Hexagon::endGame(sf::RenderTarget & target) {
-    /**
-     * \brief Draws components of game ending
-     *
-     * \param target Target where components are drawn
-     *
-     * Checks who has won the game, sets text and color, then draws components
-     */
     if(blue == red) {
         texts.at(5).setString("   Draw");
         texts.at(5).setFillColor(sf::Color(200, 0 ,250));
@@ -505,33 +364,17 @@ void Hexagon::endGame(sf::RenderTarget & target) {
 
 ///Constructor and Destructor
 Hexagon::Hexagon() {
-    /**
-     * \brief Default constructor
-     *
-     * Using initVariables(), initGUI() and setPos() methods to initialise default
-     * values of variables, create and set GUI components and set them positions in the window
-     */
     this->initVariables();
     this->initGUI();
     this->setPos();
 }
 
 Hexagon::~Hexagon() {
-    /**
-     * \brief Destructor
-     */
     delete this;
 }
 
 ///Public functions
 void Hexagon::update(sf::Vector2f pos, int & state) {
-    /**
-     * \brief Updates components of the game
-     *
-     * Checks if computer needs to make turn, updates mouse position,
-     * changes state in Window class if needed, uses other methods to update
-     * screen components and listen for the events
-     */
     if(!player && turn == sf::Color::Red && !end)
         computerTurn();
     this->mousePos = pos;
@@ -541,11 +384,6 @@ void Hexagon::update(sf::Vector2f pos, int & state) {
 }
 
 void Hexagon::render(sf::RenderTarget &target) {
-    /**
-     * \brief Draws components of the game in the window
-     *
-     * \param target Target where components are drawn
-     */
     target.draw(background);
     target.draw(texts.at(0));
     target.draw(texts.at(1));
@@ -559,9 +397,6 @@ void Hexagon::render(sf::RenderTarget &target) {
 }
 
 void Hexagon::eraseField() {
-    /**
-     * \brief Erases field in case to start a new game
-     */
     this->figures.erase(figures.begin(), figures.end());
     this->initVariables();
     this->initGUI();
@@ -570,18 +405,10 @@ void Hexagon::eraseField() {
 }
 
 void Hexagon::setGameType(bool player) {
-    /**
-     * \brief Sets type of the game
-     */
     this->player = player;
 }
 
 void Hexagon::loadGame(std::vector<int> vec) {
-    /**
-     * \brief Loads game from vector
-     *
-     * \param vec Vector that contains saved points and field state
-     */
     int idx = 0;
     blue = vec.at(idx++);
     red = vec.at(idx++);
@@ -593,11 +420,6 @@ void Hexagon::loadGame(std::vector<int> vec) {
 }
 
 std::vector<int> Hexagon::getField() {
-    /**
-     * \brief Returns field state and points
-     *
-     * \return Vector of ints with points and field status from array
-     */
     std::vector<int> vec;
     vec.push_back(blue);
     vec.push_back(red);

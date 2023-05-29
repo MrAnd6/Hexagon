@@ -20,18 +20,58 @@ private:
 
 
     ///Private functions
+    /**
+     * \brief Initializes texts
+     */
     void initTexts();
+
+    /**
+     * \brief Initializes menu background
+     */
     void initMenu();
+
+    /**
+     * Sets positions of GUI components
+     *
+     * \param target Target where components are drawn
+     */
     void setPos(sf::RenderTarget & target);
+
+    /**
+     * \brief Listens for mouse event happened
+     *
+     * \return Value that changes state in Window class
+     */
     int eventListener();
 
 public:
     ///Constructor and destructor
+    /**
+     * \brief Default constructor
+     *
+     * Using other methods initializes and sets default values and positions
+     */
     Menu();
+
+    /**
+     * \brief Destructor
+     */
     ~Menu();
 
     ///Public functions
+    /**
+     * \brief Updates mouse position and state
+     *
+     * \param pos Mouse position
+     * \param state State from Window class
+     */
     void update(sf::Vector2f pos, int & state);
+
+    /**
+     * \brief Draws menu components
+     *
+     * \param target Target where components are drawn
+     */
     void render(sf::RenderTarget & target);
 
 };
