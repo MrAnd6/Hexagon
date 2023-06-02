@@ -47,7 +47,6 @@ GameType::GameType() {
 }
 
 GameType::~GameType() {
-    delete this;
 }
 
 ///Public functions

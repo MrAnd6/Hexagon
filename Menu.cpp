@@ -57,7 +57,6 @@ Menu::Menu() : menu(font){
 }
 
 Menu::~Menu() {
-    delete this;
 }
 
 ///Public functions

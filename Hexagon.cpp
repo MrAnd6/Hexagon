@@ -370,7 +370,6 @@ Hexagon::Hexagon() {
 }
 
 Hexagon::~Hexagon() {
-    delete this;
 }
 
 ///Public functions

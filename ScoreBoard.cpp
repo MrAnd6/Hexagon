@@ -88,7 +88,6 @@ ScoreBoard::ScoreBoard() {
 }
 
 ScoreBoard::~ScoreBoard() {
-    delete this;
 }
 
 //Public functions

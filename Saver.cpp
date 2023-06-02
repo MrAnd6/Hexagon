@@ -48,7 +48,6 @@ Saver::Saver() {
 }
 
 Saver::~Saver() {
-    delete this;
 }
 
 ///Public functions
